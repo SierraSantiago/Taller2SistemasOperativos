@@ -98,3 +98,50 @@ def get_tracks(
     }
     
 
+@app.post("/tracks")
+def create_tracks(tracks: list[TrackCreate], db: SessionLocal = Depends(get_db)):
+    initial_count = db.query(Track).count()
+    
+    try:
+        for track in tracks:
+            db_track = Track(
+                track_name=track.track_name,
+                artist_name=track.artist_name,
+                artist_count=track.artist_count,
+                released_year=track.released_year,
+                released_month=track.released_month,
+                released_day=track.released_day,
+                in_spotify_playlists=track.in_spotify_playlists,
+                in_spotify_charts=track.in_spotify_charts,
+                streams=track.streams,
+                in_apple_playlists=track.in_apple_playlists,
+                in_apple_charts=track.in_apple_charts,
+                in_deezer_playlists=track.in_deezer_playlists,
+                in_deezer_charts=track.in_deezer_charts,
+                in_shazam_charts=track.in_shazam_charts,
+                bpm=track.bpm,
+                key=track.key,
+                mode=track.mode,
+                danceability_percent=track.danceability_percent,
+                valence_percent=track.valence_percent,
+                energy_percent=track.energy_percent,
+                acousticness_percent=track.acousticness_percent,
+                instrumentalness_percent=track.instrumentalness_percent,
+                liveness_percent=track.liveness_percent,
+                speechiness_percent=track.speechiness_percent,
+            )
+            db.add(db_track)
+
+        db.commit()
+        
+        final_count = db.query(Track).count()
+
+        return {
+            "added_records": len(tracks),
+            "total_records": final_count,
+            "initial_count": initial_count
+        }
+    
+    except Exception as e:
+        db.rollback()  
+        raise HTTPException(status_code=500, detail=f"Error al agregar los tracks: {str(e)}")
