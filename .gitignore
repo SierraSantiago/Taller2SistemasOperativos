@@ -1,2 +1,4 @@
-/model
-
+model/fastapi_app.service
+model/__pycache__
+model/prueba.py
+model/modelPost.py
