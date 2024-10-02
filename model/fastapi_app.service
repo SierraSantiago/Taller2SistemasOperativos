@@ -1,0 +1,13 @@
+[Unit]
+Description=FastAPI Application
+After=network.target
+
+[Service]
+User=santiago
+WorkingDirectory=/home/santiago/Escritorio/SistemasOperativos/Taller2/model
+ExecStart=/home/santiago/Escritorio/SistemasOperativos/Taller2/model/env/bin/python main.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
